@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="be">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>√ Ламповая алгебра — Уласцівасці квадратных каранёў</title>
+<style>
+  :root{
+    --bg:#f6ebd8; --bg2:#efe0c6; --ink:#3c2f23; --mut:#7a6552;
+    --card:#fffaf0; --line:#e0cdaf; --acc:#c2763a; --acc2:#8a9a5b;
+    --shadow:0 10px 30px rgba(90,60,30,.12);
+  }
+  body.night{
+    --bg:#241d17; --bg2:#1b1611; --ink:#f0e3cf; --mut:#b7a territory;
+    --mut:#b7a territory;
+  }
+  body.night{
+    --bg:#241d17; --bg2:#1b1611; --ink:#f0e3cf; --mut:#b9a68e;
+    --card:#2e251d; --line:#473a2d; --acc:#e0974f; --acc2:#9fb06a;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Georgia,"Times New Roman",serif; color:var(--ink);
+    background:radial-gradient(1200px 600px at 50% -10%, var(--bg2), var(--bg)) fixed;
+    line-height:1.65; transition:background .4s, color .4s;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:0 18px 60px}
+  header{text-align:center;padding:38px 0 10px;position:relative}
+  .lamp{font-size:44px;display:inline-block;animation:sway 4s ease-in-out infinite;filter:drop-shadow(0 0 22px rgba(224,151,79,.55))}
+  @keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+  h1{font-size:clamp(23px,4.4vw,36px);margin:6px 0 4px;letter-spacing:.4px}
+  .sub{color:var(--mut);font-style:italic;margin:0}
+  nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:22px 0 26px}
+  nav button{
+    font-family:inherit;font-size:16px;padding:9px 18px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow);
+    transition:.2s;
+  }
+  nav button:hover{transform:translateY(-2px)}
+  nav button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin:18px 0;box-shadow:var(--shadow)}
+  h2{margin:4px 0 14px;font-size:24px;color:var(--acc)}
+  h3{margin:18px 0 8px;font-size:19px}
+  .algo{border-left:4px solid var(--acc2);background:rgba(138,154,91,.1);padding:10px 16px;border-radius:0 12px 12px 0;margin:12px 0}
+  .ex{background:rgba(194,118,58,.08);border:1px dashed var(--line);border-radius:12px;padding:12px 16px;margin:12px 0}
+  .sq{font-style:normal;border-top:1.3px solid currentColor;padding:0 .18em 0 .1em;margin-left:.52em;position:relative;white-space:nowrap}
+  .sq::before{content:"√";position:absolute;left:-.54em;top:-.1em;border:0}
+  code.m{font-family:inherit;font-size:1.05em}
+  details{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:10px 0;background:rgba(0,0,0,.02)}
+  body.night details{background:rgba(255,255,255,.03)}
+  summary{cursor:pointer;font-weight:bold}
+  summary::marker{color:var(--acc)}
+  .task{margin:4px 0 2px}
+  .q{margin:18px 0 6px;font-weight:bold}
+  label.opt{display:block;padding:7px 12px;border:1px solid var(--line);border-radius:10px;margin:6px 0;cursor:pointer;transition:.15s}
+  label.opt:hover{border-color:var(--acc)}
+  label.opt.good{background:rgba(138,154,91,.22);border-color:var(--acc2)}
+  label.opt.bad{background:rgba(200,70,50,.16);border-color:#c2503a}
+  .btn{font-family:inherit;font-size:17px;padding:11px 24px;border-radius:999px;border:0;cursor:pointer;background:var(--acc);color:#fff;box-shadow:var(--shadow);transition:.2s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  #result{margin-top:16px;font-size:19px;text-align:center;min-height:30px}
+  .bar{height:10px;border-radius:999px;background:var(--line);overflow:hidden;margin:10px 0 0}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc2),var(--acc));transition:width .6s}
+  footer{text-align:center;color:var(--mut);font-size:14px;padding:24px 0}
+  .fab{position:fixed;right:18px;bottom:18px;z-index:20}
+  .modal{position:fixed;inset:0;background:rgba(30,20,10,.55);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+  .modal.show{display:flex}
+  .sheet{background:var(--card);border-radius:20px;max-width:420px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.35);border:1px solid var(--line)}
+  .sheet input{width:100%;font-family:inherit;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink);margin:6px 0 12px}
+  .sums{display:flex;gap:8px;margin:6px 0 14px;flex-wrap:wrap}
+  .sums button{flex:1;font-family:inherit;padding:8px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+  .sums button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .msg{min-height:22px;font-size:14px;color:var(--acc);text-align:center}
+  .shake{animation:sh .4s}
+  @keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .theme{position:absolute;right:0;top:34px;background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:inherit}
+  hr{border:0;border-top:1px dashed var(--line);margin:18px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <button class="theme" onclick="document.body.classList.toggle('night')">🌙 / ☀️</button>
+  <div class="lamp">🪔</div>
+  <h1>Прымяненне ўласцівасцей квадратных каранёў</h1>
+  <p class="sub">§ 4 · ламповы канспект: тэорыя → практыка → тэст</p>
+</header>
+
+<nav>
+  <button class="on" data-t="theory">📖 Теория</button>
+  <button data-t="practice">✏️ Практика</button>
+  <button data-t="test">🧠 Тест</button>
+  <button data-t="about">🕯️ О сайте</button>
+</nav>
+
+<!-- ================= ТЕОРИЯ ================= -->
+<section id="theory">
+
+  <div class="card">
+    <h2>1. Вынясенне множніка за знак кораня</h2>
+    <p>Выкарыстоўваем уласцівасць кораня са здабытку:
+      <code class="m"><i class="sq">a·b</i> = <i class="sq">a</i> · <i class="sq">b</i></code> (пры a ≥ 0, b ≥ 0).</p>
+    <div class="ex">
+      <code class="m"><i class="sq">49·2</i> = <i class="sq">49</i>·<i class="sq">2</i> = 7<i class="sq">2</i></code> — множнік 7 вынеслі за знак кораня.<br>
+      <code class="m"><i class="sq">45</i> = <i class="sq">9·5</i> = 3<i class="sq">5</i>;&nbsp;
+      <i class="sq">125</i> = <i class="sq">25·5</i> = 5<i class="sq">5</i>;&nbsp;
+      <i class="sq">5a²</i> = <i class="sq">5</i>·|a|</code>
+    </div>
+    <div class="algo">
+      <b>Алгарытм:</b><br>
+      ① падкарэнны выраз запісаць здабыткам, які змяшчае квадрат;<br>
+      ② выкарыстаць уласцівасць кораня са здабытку;<br>
+      ③ знайсці корань з квадрата;<br>
+      ④ запісаць здабытак множніка і кораня.
+    </div>
+    <div class="ex"><b>Прыклад.</b> <code class="m"><i class="sq">72</i> = <i class="sq">36·2</i> = <i class="sq">36</i>·<i class="sq">2</i> = 6<i class="sq">2</i></code></div>
+    <p>⚠️ <b>Са зменнымі — толькі праз модуль:</b> <code class="m"><i class="sq">2a²b⁴</i> = <i class="sq">2</i>·|a|·b²</code>, а пры <i>a</i> &lt; 0 атрымаем <code class="m">−ab²<i class="sq">2</i></code>.</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Унясенне множніка пад знак кораня</h2>
+    <div class="algo">
+      ① неадмоўны множнік запісаць як корань з яго квадрата;<br>
+      ② ужыць уласцівасць кораня са здабытку «справа налева»;<br>
+      ③ запісаць корань са здабытку.
+    </div>
+    <div class="ex">
+      <code class="m">5<i class="sq">7</i> = <i class="sq">5²</i>·<i class="sq">7</i> = <i class="sq">25·7</i> = <i class="sq">175</i></code><br>
+      <code class="m">2<i class="sq">3</i> = <i class="sq">4·3</i> = <i class="sq">12</i>;&nbsp; −7<i class="sq">2</i> = −<i class="sq">98</i>;&nbsp; −0,5<i class="sq">3</i> = −<i class="sq">0,75</i></code>
+    </div>
+    <p><b>Са знакам зменнай:</b><br>
+      калі <i>a</i> ≥ 0: <code class="m">a<i class="sq">7</i> = <i class="sq">7a²</i></code>;<br>
+      калі <i>a</i> ≤ 0: <code class="m">a<i class="sq">7</i> = −<i class="sq">7a²</i></code> (мінус «застаецца жыць» звонку!).</p>
+  </div>
+
+  <div class="card">
+    <h2>3. Пераўтварэнне ірацыянальных выразаў</h2>
+    <p>Выразы, якія змяшчаюць карані, называюцца <b>ірацыянальнымі</b>.</p>
+
+    <h3>Прыклад 1</h3>
+    <p><code class="m"><i class="sq">(−7)(−14)</i> ∕ <i class="sq">18·25</i> = <i class="sq">7·2·7</i> ∕ <i class="sq">2·9·25</i> = (7<i class="sq">2</i>) ∕ (3·5·<i class="sq">2</i>) = 7/15</code></p>
+
+    <h3>Прыклад 2</h3>
+    <p><code class="m"><i class="sq">18</i> − <i class="sq">50</i> + 2<i class="sq">0,5</i> = 3<i class="sq">2</i> − 5<i class="sq">2</i> + <i class="sq">2</i> = <i class="sq">2</i>(3−5+1) = −<i class="sq">2</i></code></p>
+
+    <h3>Прыклад 3 (формулы скарочанага множання)</h3>
+    <p><code class="m">(<i class="sq">7</i>−<i class="sq">5</i>)² + (<i class="sq">7</i>+<i class="sq">5</i>)² − (<i class="sq">7</i>−<i class="sq">5</i>)(<i class="sq">7</i>+<i class="sq">5</i>) = 7+5+7+5−7+5 = 22</code></p>
+
+    <h3>Прыклад 4 (раскладанне на множнікі)</h3>
+    <p>а) <code class="m">2<i class="sq">11</i> + 11 = <i class="sq">11</i>(2 + <i class="sq">11</i>)</code><br>
+       б) <code class="m"><i class="sq">14</i> − <i class="sq">21</i> = <i class="sq">7</i>(<i class="sq">2</i> − <i class="sq">3</i>)</code></p>
+
+    <h3>Прыклад 5 (скарачэнне дробу)</h3>
+    <p><code class="m">(5<i class="sq">6</i> − 6) ∕ <i class="sq">6</i> = <i class="sq">6</i>(5 − <i class="sq">6</i>) ∕ <i class="sq">6</i> = 5 − <i class="sq">6</i></code></p>
+
+    <h3>Прыклад 6 (складаны радыкал)</h3>
+    <p><code class="m">7+4<i class="sq">3</i> = (<i class="sq">3</i>+2)² ⇒ <i class="sq">7+4<i class="sq">3</i></i> = <i class="sq">3</i>+2</code><br>
+       <code class="m">7−4<i class="sq">3</i> = (<i class="sq">3</i>−2)² ⇒ <i class="sq">7−4<i class="sq">3</i></i> = |<i class="sq">3</i>−2| = 2−<i class="sq">3</i></code><br>
+       Сума: <code class="m">(<i class="sq">3</i>+2)+(2−<i class="sq">3</i>) = 4</code></p>
+  </div>
+
+  <div class="card">
+    <h2>4. Пазбаўленне ад ірацыянальнасці ў назоўніку</h2>
+    <p><b>Калі ў назоўніку просты корань</b> — множым лічнік і назоўнік на гэты корань:</p>
+    <div class="ex"><code class="m">1∕<i class="sq">2</i> = <i class="sq">2</i>∕2;&nbsp;&nbsp; 3∕<i class="sq">6</i> = 3<i class="sq">6</i>∕6 = <i class="sq">6</i>∕2</code></div>
+    <p><b>Калі ў назоўніку сума (рознасць)</b> — множым на <i>спалучаны выраз</i> (формула рознасці квадратаў):</p>
+    <div class="ex">
+      <code class="m">3∕(<i class="sq">5</i>−<i class="sq">2</i>) = 3(<i class="sq">5</i>+<i class="sq">2</i>)∕(5−2) = <i class="sq">5</i>+<i class="sq">2</i></code><br>
+      <code class="m">3∕(<i class="sq">7</i>+1) = 3(<i class="sq">7</i>−1)∕6 = (<i class="sq">7</i>−1)∕2</code>
+    </div>
+    <hr>
+    <p>💡 <b>Карысна памятаць:</b> <code class="m">(<i class="sq">a</i>)² = a</code> (пры a ≥ 0), <code class="m"><i class="sq">a²</i> = |a|</code>, <code class="m">a<i class="sq">a</i> = <i class="sq">a³</i></code> толькі пры a ≥ 0.</p>
+  </div>
+</section>
+
+<!-- ================= ПРАКТИКА ================= -->
+<section id="practice" hidden>
+  <div class="card">
+    <h2>✏️ Практыка з рашэннямі</h2>
+    <p class="sub">Спачатку рашы сам — потым расчыні «Рашэнне».</p>
+
+    <h3>А. Вынясенне множніка за знак кораня</h3>
+    <details><summary><span class="task">1) <i class="sq">200</i></summary>
+      <p><code class="m"><i class="sq">200</i> = <i class="sq">100·2</i> = 10<i class="sq">2</i></code></p></details>
+    <details><summary>2) <i class="sq">108</i></summary>
+      <p><code class="m"><i class="sq">108</i> = <i class="sq">36·3</i> = 6<i class="sq">3</i></code></p></details>
+    <details><summary>3) <i class="sq">245</i></summary>
+      <p><code class="m"><i class="sq">245</i> = <i class="sq">49·5</i> = 7<i class="sq">5</i></code></p></details>
+    <details><summary>4) 4<i class="sq">50</i></summary>
+      <p><code class="m">4<i class="sq">50</i> = 4·5<i class="sq">2</i> = 20<i class="sq">2</i></code></p></details>
+    <details><summary>5) ⅓<i class="sq">99</i></summary>
+      <p><code class="m">⅓·3<i class="sq">11</i> = <i class="sq">11</i></code></p></details>
+    <details><summary>6) <i class="sq">28m²n⁶</i></summary>
+      <p><code class="m"><i class="sq">4·7·m²·n⁶</i> = 2|m|·|n|³·<i class="sq">7</i></code> — не забывай модуль!</p></details>
+    <details><summary>7) <i class="sq">25m²n</i>, калі m &lt; 0</summary>
+      <p><code class="m">5|m|<i class="sq">n</i> = −5m<i class="sq">n</i></code> (бо |m| = −m пры m&lt;0)</p></details>
+
+    <h3>Б. Унясенне множніка пад знак кораня</h3>
+    <details><summary>8) 2<i class="sq">7</i></summary><p><code class="m"><i class="sq">4·7</i> = <i class="sq">28</i></code></p></details>
+    <details><summary>9) ⅓<i class="sq">27</i></summary><p><code class="m"><i class="sq">27∕9</i> = <i class="sq">3</i></code></p></details>
+    <details><summary>10) −(2/7)<i class="sq">147</i></summary><p><code class="m">−<i class="sq">(4/49)·147</i> = −<i class="sq">12</i> = −2<i class="sq">3</i></code></p></details>
+    <details><summary>11) m<i class="sq">3</i>, калі m &lt; 0</summary><p><code class="m">m<i class="sq">3</i> = −<i class="sq">3m²</i></code></p></details>
+
+    <h3>В. Спрашчэнне выразаў</h3>
+    <details><summary>12) 5<i class="sq">7</i> + <i class="sq">28</i></summary><p><code class="m">5<i class="sq">7</i> + 2<i class="sq">7</i> = 7<i class="sq">7</i></code></p></details>
+    <details><summary>13) 2<i class="sq">12</i> − <i class="sq">75</i></summary><p><code class="m">4<i class="sq">3</i> − 5<i class="sq">3</i> = −<i class="sq">3</i></code></p></details>
+    <details><summary>14) 4<i class="sq">2</i> + <i class="sq">50</i> − <i class="sq">32</i></summary><p><code class="m">4<i class="sq">2</i> + 5<i class="sq">2</i> − 4<i class="sq">2</i> = 5<i class="sq">2</i></code></p></details>
+    <details><summary>15) (<i class="sq">20</i> + <i class="sq">5</i>)²</summary><p><code class="m">(2<i class="sq">5</i>+<i class="sq">5</i>)² = (3<i class="sq">5</i>)² = 45</code></p></details>
+    <details><summary>16) (<i class="sq">5</i> − 1)(<i class="sq">5</i> + 3)</summary><p><code class="m">5 + 3<i class="sq">5</i> − <i class="sq">5</i> − 3 = 2 + 2<i class="sq">5</i></code></p></details>
+    <details><summary>17) (3 + <i class="sq">7</i>)(3 − <i class="sq">7</i>)</summary><p><code class="m">9 − 7 = 2</code></p></details>
+    <details><summary>18) (<i class="sq">3</i> + 1)²</summary><p><code class="m">3 + 2<i class="sq">3</i> + 1 = 4 + 2<i class="sq">3</i></code></p></details>
+
+    <h3>Г. Пазбаўленне ад ірацыянальнасці</h3>
+    <details><summary>19) 8∕<i class="sq">2</i></summary><p><code class="m">8<i class="sq">2</i>∕2 = 4<i class="sq">2</i></code></p></details>
+    <details><summary>20) 6∕(7<i class="sq">3</i>)</summary><p><code class="m">6<i class="sq">3</i>∕21 = 2<i class="sq">3</i>∕7</code></p></details>
+    <details><summary>21) 1∕(<i class="sq">3</i> − 2)</summary><p><code class="m">(<i class="sq">3</i>+2)∕(3−4) = −<i class="sq">3</i> − 2</code></p></details>
+    <details><summary>22) 9∕(5 + <i class="sq">7</i>)</summary><p><code class="m">9(5−<i class="sq">7</i>)∕18 = (5−<i class="sq">7</i>)∕2</code></p></details>
+    <details><summary>23) 4∕(<i class="sq">5</i> − <i class="sq">3</i>)</summary><p><code class="m">4(<i class="sq">5</i>+<i class="sq">3</i>)∕2 = 2(<i class="sq">5</i>+<i class="sq">3</i>)</code></p></details>
+    <details><summary>24) 9∕(<i class="sq">13</i>−2) + 3∕(4+<i class="sq">13</i>)</summary>
+      <p><code class="m">(<i class="sq">13</i>+2) + (4−<i class="sq">13</i>) = 6</code></p></details>
+
+    <h3>Д. Раскладанне на множнікі</h3>
+    <details><summary>25) 5 + <i class="sq">5</i></summary><p><code class="m"><i class="sq">5</i>(<i class="sq">5</i> + 1)</code></p></details>
+    <details><summary>26) 7<i class="sq">6</i> + 6</summary><p><code class="m"><i class="sq">6</i>(7 + <i class="sq">6</i>)</code></p></details>
+    <details><summary>27) <i class="sq">15</i> − 7<i class="sq">3</i></summary><p><code class="m"><i class="sq">3</i>(<i class="sq">5</i> − 7)</code></p></details>
+    <details><summary>28) ⭐ <i class="sq">7+4<i class="sq">3</i></i> + <i class="sq">7−4<i class="sq">3</i></i></summary>
+      <p><code class="m">(<i class="sq">3</i>+2) + (2−<i class="sq">3</i>) = 4</code></p></details>
+  </div>
+</section>
+
+<!-- ================= ТЕСТ ================= -->
+<section id="test" hidden>
+  <div class="card">
+    <h2>🧠 Тэст: 10 пытанняў</h2>
+    <p class="sub">Адзін правільны адказ. Унізе — кнопка праверкі.</p>
+    <div id="quiz"></div>
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn" onclick="checkTest()">Праверыць</button>
+      <button class="btn ghost" onclick="buildQuiz()">Пачаць зноў</button>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+    <div id="result"></div>
+  </div>
+</section>
+
+<!-- ================= О САЙТЕ ================= -->
+<section id="about" hidden>
+  <div class="card">
+    <h2>🕯️ О сайте</h2>
+    <p>Ламповы міні-канспект па тэме «Прымяненне ўласцівасцей квадратных каранёў» (Алгебра, раздзел 1, § 4).
+       Тут ёсць тры рэчы: <b>тэорыя</b> з алгарытмамі, <b>практыка</b> з падрабязнымі рашэннямі і <b>тэст</b> на 10 пытанняў.</p>
+    <p>Сайт нічога не збірае, нічога не прадае, працуе без інтэрнэту. Кнопка «Падтрымаць» — <i>фейкавая</i> 😌
+       (але там ёсць адно маленькае поле, якое любіць лічбы...).</p>
+    <p class="sub">Зроблена з гарбатай і цёплым святлом настольнай лямпы.</p>
+  </div>
+</section>
+
+<footer>🪔 Ламповая алгебра · √ · <span style="opacity:.5">не ўсе кнопкі тут такія простыя, як здаюцца</span></footer>
+</div>
+
+<div class="fab"><button class="btn" onclick="openSup()">☕ Падтрымаць</button></div>
+
+<!-- ============ МОДАЛКА ПОДДЕРЖКИ ============ -->
+<div class="modal" id="sup">
+  <div class="sheet" id="sheet">
+    <h2 style="margin-top:0">☕ Падтрымаць праект</h2>
+    <p class="sub" style="margin-top:-8px">Кубак гарбаты аўтару канспекта</p>
+    <div class="sums">
+      <button onclick="pick(this,2)">2 BYN</button>
+      <button class="on" onclick="pick(this,5)">5 BYN</button>
+      <button onclick="pick(this,10)">10 BYN</button>
+    </div>
+    <input id="card" placeholder="Нумар карты  ••••  ••••  ••••  ••••" maxlength="19" oninput="fmt(this)">
+    <input id="name" placeholder="Імя на карце">
+    <input id="promo" placeholder="Прамакод (калі ёсць)" maxlength="8">
+    <div style="text-align:center">
+      <button class="btn" style="width:100%" onclick="pay()">Падтрымаць 💛</button>
+      <div class="msg" id="msg"></div>
+      <button class="btn ghost" style="margin-top:6px" onclick="closeSup()">Закрыць</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- навигация ---------- */
+const tabs = document.querySelectorAll('nav button');
+tabs.forEach(b=>b.onclick=()=>{
+  tabs.forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  ['theory','practice','test','about'].forEach(id=>document.getElementById(id).hidden = (id!==b.dataset.t));
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- тест ---------- */
+const R=(x)=>'<i class="sq">'+x+'</i>';
+const QS=[
+ {q:'Вынесіце множнік за знак кораня: '+R(72),
+  o:['6'+R(2),'8'+R(3),'2'+R(18),'36'+R(2)],c:0,e:'72 = 36·2 ⇒ 6√2'},
+ {q:'Чаму роўна '+R(245)+'?',
+  o:['5'+R(7),'7'+R(5),'49'+R(5),'7'+R(35)],c:1,e:'245 = 49·5 ⇒ 7√5'},
+ {q:'Спрасціце: 4'+R(50),
+  o:['20'+R(2),'4'+R(25),'10'+R(2),'200'],c:0,e:'√50 = 5√2 ⇒ 4·5√2 = 20√2'},
+ {q:'Унясіце множнік пад корань: −3'+R(6),
+  o:[R(54),'−'+R(54),'−'+R(18),'−'+R(-54)],c:1,e:'мінус застаецца звонку: −√(9·6) = −√54'},
+ {q:'Вынесіце множнік: '+R('25m²n')+', калі m &lt; 0',
+  o:['5m'+R('n'),'−5m'+R('n'),'5m²'+R('n'),'−25m'+R('n')],c:1,e:'√(25m²n) = 5|m|√n, а |m| = −m пры m<0'},
+ {q:'Спрасціце: 3'+R(2)+' + '+R(50)+' − '+R(18),
+  o:['5'+R(2),R(34),'11'+R(2),'−'+R(2)],c:0,e:'3√2 + 5√2 − 3√2 = 5√2'},
+ {q:'Вылічыце: ('+R(3)+' + 1)²',
+  o:['4','4 + 2'+R(3),'3 + '+R(3),'2 + 2'+R(3)],c:1,e:'3 + 2√3 + 1 = 4 + 2√3'},
+ {q:'Вылічыце: ('+R(7)+' − '+R(5)+')('+R(7)+' + '+R(5)+')',
+  o:['2','12',R(2),'−2'],c:0,e:'рознасць квадратаў: 7 − 5 = 2'},
+ {q:'Пазбаўцеся ад ірацыянальнасці: 2 ∕ '+R(7),
+  o:['2'+R(7),'2'+R(7)+' ∕ 7',R(7)+' ∕ 2','2 ∕ 7'],c:1,e:'множым на √7: 2√7/7'},
+ {q:'Пазбаўцеся ад ірацыянальнасці: 6 ∕ ('+R(15)+' − 3)',
+  o:[R(15)+' + 3',R(15)+' − 3','6'+R(15)+' + 18','('+R(15)+' + 3) ∕ 6'],c:0,e:'множым на спалучаны: 6(√15+3)/(15−9) = √15+3'}
+];
+function buildQuiz(){
+  const w=document.getElementById('quiz'); w.innerHTML='';
+  QS.forEach((it,i)=>{
+    let h='<div class="q">'+(i+1)+'. '+it.q+'</div>';
+    it.o.forEach((o,j)=>{h+='<label class="opt" data-i="'+i+'" data-j="'+j+'"><input type="radio" name="q'+i+'" value="'+j+'"> '+o+'</label>';});
+    h+='<div class="sub" style="font-size:14px;display:none" id="e'+i+'">💡 '+it.e+'</div>';
+    w.innerHTML+=h;
+  });
+  document.getElementById('result').innerHTML=''; document.getElementById('bar').style.width='0';
+}
+function checkTest(){
+  let s=0;
+  QS.forEach((it,i)=>{
+    const sel=document.querySelector('input[name=q'+i+']:checked');
+    document.querySelectorAll('label.opt[data-i="'+i+'"]').forEach(l=>{
+      l.classList.remove('good','bad');
+      if(+l.dataset.j===it.c) l.classList.add('good');
+      if(sel && +sel.value===+l.dataset.j && +l.dataset.j!==it.c) l.classList.add('bad');
+    });
+    document.getElementById('e'+i).style.display='block';
+    if(sel && +sel.value===it.c) s++;
+  });
+  const p=Math.round(s/QS.length*100);
+  document.getElementById('bar').style.width=p+'%';
+  let m = s===10?'🏆 Ідэальна! Карані табе пакараюцца.' : s>=8?'🔥 Моцна! Амаль бездакорна.' : s>=5?'🙂 Нядрэнна, але паўтары тэорыю.' : '🪔 Вяртайся ў раздзел «Теория» — і ўсё атрымаецца!';
+  document.getElementById('result').innerHTML='<b>'+s+' / 10</b> ('+p+'%)<br>'+m;
+}
+buildQuiz();
+
+/* ---------- фейк-поддержка ---------- */
+let sum=5;
+function openSup(){document.getElementById('sup').classList.add('show');}
+function closeSup(){document.getElementById('sup').classList.remove('show');document.getElementById('msg').textContent='';}
+document.getElementById('sup').addEventListener('click',e=>{if(e.target.id==='sup')closeSup();});
+function pick(b,v){document.querySelectorAll('.sums button').forEach(x=>x.classList.remove('on'));b.classList.add('on');sum=v;}
+function fmt(el){el.value=el.value.replace(/\D/g,'').slice(0,16).replace(/(.{4})/g,'$1 ').trim();}
+
+const JOKES=['Плацёжная сістэма спіць 😴','Банк сказаў «не сёння» 🙃','Транзакцыя пайшла піць гарбату ☕','Кнопка прыгожая, але фейкавая 🤫'];
+function pay(){
+  const code=document.getElementById('promo').value.trim();
+  const msg=document.getElementById('msg');
+  if(code==='6767'){ msg.style.color='#8a9a5b'; msg.textContent='Прамакод прыняты... адкрываем 🚪'; setTimeout(egg,700); return; }
+  if(code.length>0){ msg.style.color='#c2503a'; msg.textContent='Такога прамакода няма 🙃'; shake(); return; }
+  msg.style.color='var(--acc)'; msg.textContent=JOKES[Math.floor(Math.random()*JOKES.length)]+' ('+sum+' BYN не спісана)'; shake();
+}
+function shake(){const s=document.getElementById('sheet');s.classList.remove('shake');void s.offsetWidth;s.classList.add('shake');}
+
+/* ---------- ПАСХАЛКА: отдельный сайт ---------- */
+function egg(){
+  const html = `<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1"><title>ыы</title><style>
+  html,body{height:100%;margin:0;overflow:hidden;background:#140f1e;
+    font-family:Georgia,serif;color:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column}
+  .bgb{position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,#ff7b54,transparent 40%),
+       radial-gradient(circle at 80% 70%,#6c5ce7,transparent 45%),radial-gradient(circle at 50% 100%,#00b894,transparent 40%);
+       filter:blur(40px);animation:mv 9s ease-in-out infinite alternate;opacity:.75}
+  @keyframes mv{to{transform:scale(1.3) rotate(12deg)}}
+  h1{position:relative;font-size:clamp(46px,16vw,170px);margin:0;letter-spacing:4px;
+     text-shadow:0 0 40px rgba(255,255,255,.55);animation:pop 1.6s ease-in-out infinite}
+  @keyframes pop{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.09) rotate(2deg)}}
+  p{position:relative;opacity:.85;font-style:italic;margin-top:14px;font-size:18px}
+  a{position:relative;margin-top:26px;color:#140f1e;background:#ffd36e;text-decoration:none;
+    padding:11px 26px;border-radius:999px;font-weight:bold;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+  .c{position:fixed;top:-50px;font-size:26px;animation:fall linear infinite}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+  </style></head><body><div class="bgb"></div>
+  <h1>ыы посхалка</h1>
+  <p>код 6767 прыняты · ты знайшоў сакрэтны сайт 🪔</p>
+  <a href="javascript:window.close()">закрыць і вярнуцца да каранёў √</a>
+  <script>
+  const e=['🪔','✨','√','🎉','☕','🧡','🌙'];
+  for(let i=0;i<40;i++){const d=document.createElement('div');d.className='c';
+    d.textContent=e[Math.floor(Math.random()*e.length)];
+    d.style.left=Math.random()*100+'vw';
+    d.style.animationDuration=(3+Math.random()*5)+'s';
+    d.style.animationDelay=(Math.random()*5)+'s';
+    document.body.appendChild(d);}
+  <\/script></body></html>`;
+  const url = URL.createObjectURL(new Blob([html],{type:'text/html'}));
+  const w = window.open(url,'_blank');
+  if(!w) location.href = url;   // если popup заблокирован — переходим в этой же вкладке
+}
+</script>
+</body>
+</html>
