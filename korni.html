@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Корни & Уют — ламповая алгебра</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:Georgia,'Times New Roman',serif;
+    background:radial-gradient(1200px 700px at 50% -150px,#3a2a17 0%,#241a10 45%,#17110b 100%) fixed;
+    color:#f3e6cf;line-height:1.65;min-height:100vh;
+  }
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:2000;
+    background:linear-gradient(90deg,#ff9d45,#ffd9a0);box-shadow:0 0 8px #ff9d45}
+  /* ---------- лампа ---------- */
+  .lamp-zone{text-align:center;padding-top:10px}
+  .cord{width:2px;height:46px;background:#6b5232;margin:0 auto}
+  .lamp{font-size:64px;display:inline-block;transform-origin:top center;
+    filter:drop-shadow(0 0 25px rgba(255,170,60,.85)) drop-shadow(0 0 60px rgba(255,140,40,.4));
+    animation:sway 6s ease-in-out infinite, flick 4s linear infinite}
+  @keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+  @keyframes flick{0%,88%,92%,96%,100%{opacity:1}90%,94%{opacity:.55}}
+  /* ---------- шапка ---------- */
+  header{text-align:center;padding:10px 20px 26px}
+  h1{font-size:clamp(2rem,5vw,3.2rem);letter-spacing:1px;
+    background:linear-gradient(135deg,#ffd9a0,#ff9d45 60%,#ff7b2e);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 40px rgba(255,150,60,.15)}
+  .sub{color:#c9b795;font-style:italic;margin-top:6px}
+  .sub b{color:#ffb454}
+  /* ---------- вкладки ---------- */
+  nav.tabs{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;padding:6px 16px 26px}
+  .tab-btn{background:#2c2115;color:#e8d5ae;border:1px solid #4a3823;padding:12px 28px;
+    border-radius:999px;cursor:pointer;font-family:inherit;font-size:1.05rem;transition:.25s}
+  .tab-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(255,150,50,.18)}
+  .tab-btn.active{background:linear-gradient(135deg,#ff9d45,#ff7b2e);color:#241505;
+    border-color:#ff9d45;font-weight:bold;box-shadow:0 6px 22px rgba(255,140,50,.35)}
+  main{max-width:920px;margin:0 auto;padding:0 18px 60px}
+  .page{display:none}
+  .page.active{display:block;animation:fade .45s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  /* ---------- карточки ---------- */
+  .card{background:linear-gradient(160deg,#2c2115,#241a10);border:1px solid #4a3823;
+    border-radius:16px;padding:22px 24px;margin-bottom:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,190,110,.08)}
+  .card h2{color:#ffb454;margin-bottom:12px;font-size:1.35rem}
+  .card h3{color:#ffd9a0;margin:14px 0 6px;font-size:1.1rem}
+  .rule{border-left:4px solid #ff9d45;background:rgba(255,157,69,.08);
+    padding:10px 16px;border-radius:0 12px 12px 0;margin:12px 0}
+  .ex{background:rgba(255,217,160,.06);border:1px dashed #6b5232;border-radius:12px;
+    padding:12px 16px;margin:10px 0;font-size:1.05rem}
+  .ex b{color:#ffd9a0}
+  ol.alg{margin:8px 0 8px 22px}
+  ol.alg li{margin:4px 0}
+  .crib{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:10px}
+  .crib div{background:#1d150c;border:1px solid #4a3823;border-radius:12px;
+    padding:12px;text-align:center;font-size:1.1rem}
+  /* ---------- математика ---------- */
+  .r{text-decoration:overline}
+  .fr{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 3px;line-height:1.3}
+  .fr>span:first-child{border-bottom:1.5px solid currentColor;padding:0 5px}
+  .fr>span:last-child{padding:0 5px}
+  /* ---------- практика ---------- */
+  .group-title{color:#ffd9a0;font-size:1.2rem;margin:26px 0 12px;
+    border-bottom:1px solid #4a3823;padding-bottom:6px}
+  .task{display:flex;flex-direction:column;gap:8px}
+  .task .t{font-size:1.1rem}
+  .sol-btn{align-self:flex-start;background:none;border:1px solid #6b5232;color:#ffb454;
+    border-radius:8px;padding:6px 14px;cursor:pointer;font-family:inherit;font-size:.95rem;transition:.2s}
+  .sol-btn:hover{background:rgba(255,157,69,.12)}
+  .sol{display:none;border-left:3px solid #7dd87d;background:rgba(125,216,125,.07);
+    padding:10px 14px;border-radius:0 10px 10px 0;font-size:1.05rem}
+  .sol.open{display:block;animation:fade .35s}
+  /* ---------- тест ---------- */
+  .q-card .q-title{font-size:1.12rem;margin-bottom:10px}
+  .opt{display:flex;gap:10px;align-items:center;background:#1d150c;border:1px solid #4a3823;
+    border-radius:10px;padding:10px 14px;margin:7px 0;cursor:pointer;transition:.2s;font-size:1.05rem}
+  .opt:hover{border-color:#ffb454}
+  .opt input{accent-color:#ff9d45;transform:scale(1.2)}
+  .opt.correct{border-color:#7dd87d;background:rgba(125,216,125,.12)}
+  .opt.wrong{border-color:#e06c5b;background:rgba(224,108,91,.12)}
+  .big-btn{display:block;margin:24px auto;background:linear-gradient(135deg,#ff9d45,#ff7b2e);
+    color:#241505;border:none;padding:14px 42px;border-radius:999px;font-size:1.15rem;
+    font-family:inherit;font-weight:bold;cursor:pointer;box-shadow:0 8px 24px rgba(255,140,50,.35);transition:.2s}
+  .big-btn:hover{transform:translateY(-2px) scale(1.02)}
+  #result{text-align:center;font-size:1.3rem;margin-top:18px;color:#ffd9a0;display:none}
+  /* ---------- футер ---------- */
+  footer{text-align:center;padding:34px 16px 46px;border-top:1px solid #3a2c1c;color:#a89374}
+  #supportBtn{margin-top:14px;background:linear-gradient(135deg,#3a2c1c,#2c2115);
+    border:1px solid #ffb454;color:#ffb454;padding:12px 30px;border-radius:999px;
+    font-family:inherit;font-size:1.05rem;cursor:pointer;transition:.25s}
+  #supportBtn:hover{background:#ffb454;color:#241505;box-shadow:0 0 25px rgba(255,180,84,.4)}
+  /* ---------- модалка ---------- */
+  #modal{position:fixed;inset:0;background:rgba(10,7,4,.8);backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;z-index:3000;padding:16px}
+  #modal.show{display:flex}
+  .modal-box{background:linear-gradient(160deg,#2c2115,#1d150c);border:1px solid #ffb454;
+    border-radius:18px;padding:28px;max-width:420px;width:100%;text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.7)}
+  .modal-box h3{color:#ffb454;margin-bottom:8px}
+  .modal-box p{color:#c9b795;font-size:.95rem;margin-bottom:16px}
+  #codeInput{width:100%;padding:12px;font-size:1.3rem;text-align:center;letter-spacing:6px;
+    background:#17110b;border:1px solid #6b5232;border-radius:10px;color:#ffd9a0;
+    font-family:inherit;outline:none}
+  #codeInput:focus{border-color:#ffb454;box-shadow:0 0 12px rgba(255,180,84,.3)}
+  #err{color:#e06c5b;min-height:24px;margin:8px 0;font-size:.95rem}
+  .modal-actions{display:flex;gap:10px;justify-content:center}
+  .modal-actions button{padding:10px 22px;border-radius:10px;font-family:inherit;
+    font-size:1rem;cursor:pointer;border:1px solid #6b5232;background:none;color:#c9b795}
+  #payBtn{background:linear-gradient(135deg,#ff9d45,#ff7b2e);color:#241505;border:none;font-weight:bold}
+  .shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  /* ---------- ыы посхалка ---------- */
+  #poshalka{position:fixed;inset:0;background:#000;display:none;z-index:9999;
+    flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+  #poshalka.show{display:flex}
+  .glitch{font-family:'Courier New',monospace;font-weight:bold;
+    font-size:clamp(3rem,13vw,10rem);color:#0f0;letter-spacing:.05em;
+    animation:crazy .35s infinite alternate;text-align:center;line-height:1.1}
+  @keyframes crazy{
+    0%{transform:translate(-4px,2px) rotate(-1deg);text-shadow:4px 0 #f00,-4px 0 #00f}
+    100%{transform:translate(4px,-2px) rotate(1deg);text-shadow:-4px 0 #f00,4px 0 #00f}}
+  .posh-sub{color:#888;font-family:'Courier New',monospace;margin-top:18px;font-size:1rem;text-align:center;padding:0 16px}
+  #backBtn{margin-top:30px;background:none;border:1px solid #444;color:#666;
+    padding:10px 24px;border-radius:8px;cursor:pointer;font-family:'Courier New',monospace}
+  #backBtn:hover{color:#0f0;border-color:#0f0}
+  .fall{position:absolute;top:-60px;font-size:34px;animation:fall linear forwards;pointer-events:none}
+  @keyframes fall{to{transform:translateY(115vh) rotate(420deg)}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<div class="lamp-zone"><div class="cord"></div><div class="lamp">💡</div></div>
+
+<header>
+  <h1>Корни &amp; Уют</h1>
+  <p class="sub">Ламповый разбор §4: <b>применение свойств квадратных корней</b> · стр. 49–59</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="theory">📖 Теория</button>
+  <button class="tab-btn" data-tab="practice">✏️ Практика</button>
+  <button class="tab-btn" data-tab="test">🧠 Тест</button>
+</nav>
+
+<main>
+<!-- ============ ТЕОРИЯ ============ -->
+<section class="page active" id="theory">
+
+  <div class="card">
+    <h2>📤 Вынесение множителя за знак корня</h2>
+    <div class="rule"><b>Алгоритм:</b>
+      <ol class="alg">
+        <li>Запиши подкоренное выражение в виде произведения, содержащего квадрат выражения.</li>
+        <li>Воспользуйся свойством корня из произведения.</li>
+        <li>Найди корень из квадрата выражения.</li>
+        <li>Запиши произведение полученного множителя и корня.</li>
+      </ol>
+    </div>
+    <div class="ex">√<span class="r">72</span> = √<span class="r">36·2</span> = √<span class="r">36</span>·√<span class="r">2</span> = <b>6√<span class="r">2</span></b></div>
+    <div class="ex">√<span class="r">125</span> = √<span class="r">25·5</span> = <b>5√<span class="r">5</span></b> &nbsp;&nbsp;·&nbsp;&nbsp; √<span class="r">5a²</span> = √<span class="r">5</span>·√<span class="r">a²</span> = <b>√<span class="r">5</span>·|a|</b></div>
+  </div>
+
+  <div class="card">
+    <h2>📥 Внесение множителя под знак корня</h2>
+    <div class="rule">Если <b>a ≥ 0</b>, то a = √<span class="r">a²</span>, поэтому a√<span class="r">b</span> = √<span class="r">a²b</span>.<br>
+    Если <b>a &lt; 0</b>, минус остаётся снаружи: a√<span class="r">b</span> = −√<span class="r">a²b</span>.</div>
+    <div class="ex">5√<span class="r">3</span> = √<span class="r">5²</span>·√<span class="r">3</span> = √<span class="r">25·3</span> = <b>√<span class="r">75</span></b></div>
+    <div class="ex">−7√<span class="r">2</span> = −√<span class="r">7²</span>·√<span class="r">2</span> = <b>−√<span class="r">98</span></b> &nbsp;&nbsp;·&nbsp;&nbsp; −0,5√<span class="r">3</span> = <b>−√<span class="r">0,75</span></b></div>
+  </div>
+
+  <div class="card">
+    <h2>🔄 Преобразование выражений с корнями</h2>
+    <h3>Подобные слагаемые</h3>
+    <div class="ex">√<span class="r">18</span> − √<span class="r">50</span> + 2√<span class="r">0,5</span> = 3√<span class="r">2</span> − 5√<span class="r">2</span> + √<span class="r">2</span> = √<span class="r">2</span>·(3−5+1) = <b>−√<span class="r">2</span></b></div>
+    <h3>Формулы сокращённого умножения тоже работают</h3>
+    <div class="ex">(√<span class="r">7</span>−√<span class="r">5</span>)² + (√<span class="r">7</span>+√<span class="r">5</span>)² − (√<span class="r">7</span>−√<span class="r">5</span>)(√<span class="r">7</span>+√<span class="r">5</span>) = 7+5+7+5−7+5 = <b>22</b></div>
+    <h3>Сокращение дробей</h3>
+    <div class="ex"><span class="fr"><span>5√<span class="r">6</span> − 6</span><span>√<span class="r">6</span></span></span> = <span class="fr"><span>√<span class="r">6</span>(5 − √<span class="r">6</span>)</span><span>√<span class="r">6</span></span></span> = <b>5 − √<span class="r">6</span></b></div>
+  </div>
+
+  <div class="card">
+    <h2>🧹 Избавление от иррациональности в знаменателе</h2>
+    <div class="rule">В знаменателе просто корень → домножь на этот корень.<br>
+    В знаменателе сумма/разность → домножь на <b>сопряжённое</b> выражение.</div>
+    <div class="ex"><span class="fr"><span>1</span><span>√<span class="r">2</span></span></span> = <span class="fr"><span>1·√<span class="r">2</span></span><span>√<span class="r">2</span>·√<span class="r">2</span></span></span> = <span class="fr"><span><b>√<span class="r">2</span></b></span><span><b>2</b></span></span> &nbsp;&nbsp;·&nbsp;&nbsp;
+    <span class="fr"><span>3</span><span>√<span class="r">6</span></span></span> = <span class="fr"><span>3√<span class="r">6</span></span><span>6</span></span> = <span class="fr"><span><b>√<span class="r">6</span></b></span><span><b>2</b></span></span></div>
+    <div class="ex"><span class="fr"><span>3</span><span>√<span class="r">5</span> − √<span class="r">2</span></span></span> = <span class="fr"><span>3(√<span class="r">5</span>+√<span class="r">2</span>)</span><span>5 − 2</span></span> = <b>√<span class="r">5</span> + √<span class="r">2</span></b> &nbsp;&nbsp;·&nbsp;&nbsp;
+    <span class="fr"><span>3</span><span>√<span class="r">7</span> + 1</span></span> = <span class="fr"><span><b>√<span class="r">7</span> − 1</b></span><span><b>2</b></span></span></div>
+  </div>
+
+  <div class="card">
+    <h2>🕯 Шпаргалка на салфетке</h2>
+    <div class="crib">
+      <div>√<span class="r">ab</span> = √<span class="r">a</span>·√<span class="r">b</span></div>
+      <div>√<span class="r">a²</span> = |a|</div>
+      <div>a√<span class="r">b</span> = √<span class="r">a²b</span> (a≥0)</div>
+      <div>a√<span class="r">b</span> = −√<span class="r">a²b</span> (a&lt;0)</div>
+      <div>(a−b)(a+b) = a²−b²</div>
+      <div>(a±b)² = a²±2ab+b²</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ПРАКТИКА ============ -->
+<section class="page" id="practice">
+  <div class="group-title">📤 Вынеси множитель за знак корня</div>
+  <div class="card task"><div class="t">1. √<span class="r">27</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">√<span class="r">27</span> = √<span class="r">9·3</span> = √<span class="r">9</span>·√<span class="r">3</span> = <b>3√<span class="r">3</span></b></div></div>
+  <div class="card task"><div class="t">2. √<span class="r">72</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">√<span class="r">72</span> = √<span class="r">36·2</span> = <b>6√<span class="r">2</span></b></div></div>
+  <div class="card task"><div class="t">3. √<span class="r">108</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">√<span class="r">108</span> = √<span class="r">36·3</span> = <b>6√<span class="r">3</span></b></div></div>
+  <div class="card task"><div class="t">4. √<span class="r">245</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">√<span class="r">245</span> = √<span class="r">49·5</span> = <b>7√<span class="r">5</span></b></div></div>
+
+  <div class="group-title">📥 Внеси множитель под знак корня</div>
+  <div class="card task"><div class="t">5. 2√<span class="r">7</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">2√<span class="r">7</span> = √<span class="r">2²·7</span> = <b>√<span class="r">28</span></b></div></div>
+  <div class="card task"><div class="t">6. <span class="fr"><span>1</span><span>3</span></span>√<span class="r">27</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= √<span class="r">27/9</span> = √<span class="r">3</span> = <b>√<span class="r">3</span></b></div></div>
+  <div class="card task"><div class="t">7. −2√<span class="r">5</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">−2√<span class="r">5</span> = −√<span class="r">4·5</span> = <b>−√<span class="r">20</span></b> (минус не трогаем!)</div></div>
+  <div class="card task"><div class="t">8. −10√<span class="r">3</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">−10√<span class="r">3</span> = −√<span class="r">100·3</span> = <b>−√<span class="r">300</span></b></div></div>
+
+  <div class="group-title">🔄 Вычисли</div>
+  <div class="card task"><div class="t">9. 5√<span class="r">7</span> + √<span class="r">28</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= 5√<span class="r">7</span> + 2√<span class="r">7</span> = <b>7√<span class="r">7</span></b></div></div>
+  <div class="card task"><div class="t">10. 2√<span class="r">12</span> − √<span class="r">75</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= 4√<span class="r">3</span> − 5√<span class="r">3</span> = <b>−√<span class="r">3</span></b></div></div>
+  <div class="card task"><div class="t">11. √<span class="r">48</span> + 12 − 4√<span class="r">3</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= 4√<span class="r">3</span> + 12 − 4√<span class="r">3</span> = <b>12</b> — корни испарились ✨</div></div>
+  <div class="card task"><div class="t">12. 4√<span class="r">2</span> + √<span class="r">50</span> − √<span class="r">32</span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= 4√<span class="r">2</span> + 5√<span class="r">2</span> − 4√<span class="r">2</span> = <b>5√<span class="r">2</span></b></div></div>
+
+  <div class="group-title">🧮 Формулы сокращённого умножения</div>
+  <div class="card task"><div class="t">13. (1 − 3√<span class="r">5</span>)(1 + 3√<span class="r">5</span>)</div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= 1 − (3√<span class="r">5</span>)² = 1 − 45 = <b>−44</b></div></div>
+  <div class="card task"><div class="t">14. (√<span class="r">6</span> + √<span class="r">3</span>)(√<span class="r">3</span> − √<span class="r">6</span>)</div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= (√<span class="r">3</span>)² − (√<span class="r">6</span>)² = 3 − 6 = <b>−3</b></div></div>
+  <div class="card task"><div class="t">15. (√<span class="r">3</span> + 1)²</div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= 3 + 2√<span class="r">3</span> + 1 = <b>4 + 2√<span class="r">3</span></b></div></div>
+  <div class="card task"><div class="t">16. 21 − (2√<span class="r">5</span> + 1)²</div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= 21 − (20 + 4√<span class="r">5</span> + 1) = <b>−4√<span class="r">5</span></b></div></div>
+
+  <div class="group-title">🧹 Избавься от иррациональности в знаменателе</div>
+  <div class="card task"><div class="t">17. <span class="fr"><span>8</span><span>√<span class="r">2</span></span></span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= <span class="fr"><span>8√<span class="r">2</span></span><span>2</span></span> = <b>4√<span class="r">2</span></b></div></div>
+  <div class="card task"><div class="t">18. <span class="fr"><span>3</span><span>√<span class="r">15</span></span></span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= <span class="fr"><span>3√<span class="r">15</span></span><span>15</span></span> = <span class="fr"><span><b>√<span class="r">15</span></b></span><span><b>5</b></span></span></div></div>
+  <div class="card task"><div class="t">19. <span class="fr"><span>1</span><span>√<span class="r">3</span> − 2</span></span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= <span class="fr"><span>√<span class="r">3</span>+2</span><span>3−4</span></span> = <b>−√<span class="r">3</span> − 2</b></div></div>
+  <div class="card task"><div class="t">20. <span class="fr"><span>9</span><span>5 + √<span class="r">7</span></span></span></div>
+    <button class="sol-btn">Показать решение ▼</button>
+    <div class="sol">= <span class="fr"><span>9(5−√<span class="r">7</span>)</span><span>25−7</span></span> = <span class="fr"><span>9(5−√<span class="r">7</span>)</span><span>18</span></span> = <span class="fr"><span><b>5 − √<span class="r">7</span></b></span><span><b>2</b></span></span></div></div>
+</section>
+
+<!-- ============ ТЕСТ ============ -->
+<section class="page" id="test">
+  <div class="card" style="text-align:center">
+    <h2>🧠 Уютная проверка знаний</h2>
+    <p style="color:#c9b795">10 вопросов. Грейся у лампы, не спеши.</p>
+  </div>
+  <div id="quiz"></div>
+  <button class="big-btn" id="checkQuiz">Проверить 🔥</button>
+  <div id="result"></div>
+  <button class="big-btn" id="retryQuiz" style="display:none;background:#2c2115;color:#ffb454;border:1px solid #ffb454;box-shadow:none">Пройти заново</button>
+</section>
+</main>
+
+<footer>
+  <div>сделано с теплом 🕯 · квадратные корни не кусаются</div>
+  <button id="supportBtn">☕ Поддержать проект</button>
+</footer>
+
+<!-- модалка поддержки -->
+<div id="modal">
+  <div class="modal-box">
+    <h3>☕ Поддержка проекта</h3>
+    <p>Введи секретный код поддержки. С твоего счёта ничего не спишется. Наверное.</p>
+    <input id="codeInput" type="password" inputmode="numeric" maxlength="8" placeholder="••••">
+    <div id="err"></div>
+    <div class="modal-actions">
+      <button id="modalClose">Отмена</button>
+      <button id="payBtn">Подтвердить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ыы посхалка -->
+<div id="poshalka">
+  <div class="glitch">ыы<br>посхалка</div>
+  <div class="posh-sub">код 6767 принят · деньги списаны с твоего воображения</div>
+  <button id="backBtn">← вернуться в уют</button>
+</div>
+
+<script>
+/* ---------- прогресс-бар ---------- */
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  document.getElementById('progress').style.width=
+    (h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+});
+
+/* ---------- вкладки ---------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(btn.dataset.tab).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+/* ---------- решения в практике ---------- */
+document.querySelectorAll('.sol-btn').forEach(b=>b.addEventListener('click',()=>{
+  const s=b.nextElementSibling;s.classList.toggle('open');
+  b.textContent=s.classList.contains('open')?'Скрыть решение ▲':'Показать решение ▼';
+}));
+
+/* ---------- тест ---------- */
+const R=t=>'√<span class="r">'+t+'</span>';
+const FR=(n,d)=>'<span class="fr"><span>'+n+'</span><span>'+d+'</span></span>';
+const QUIZ=[
+ {q:'Вынеси множитель за знак корня: '+R('18'),o:['2'+R('3'),'3'+R('2'),'9'+R('2'),'6'+R('3')],a:1},
+ {q:'Вынеси множитель: '+R('200'),o:['20'+R('5'),'100'+R('2'),'10'+R('2'),'5'+R('2')],a:2},
+ {q:'Внеси множитель под корень: 2'+R('7'),o:[R('14'),R('28'),R('21'),R('49')],a:1},
+ {q:'Внеси множитель: −3'+R('6'),o:[R('54'),'−'+R('18'),'−'+R('36'),'−'+R('54')],a:3},
+ {q:'Вычисли: '+R('12')+' + '+R('75'),o:['9'+R('3'),R('87'),'7'+R('3'),'5'+R('3')],a:2},
+ {q:'Вычисли: (3 + '+R('7')+')(3 − '+R('7')+')',o:['16','2','−7','4'],a:1},
+ {q:'Избавься от иррациональности: '+FR('1',R('2')),o:[FR(R('2'),'2'),FR('1','2'),R('2'),'2'+R('2')],a:0},
+ {q:'Избавься от иррациональности: '+FR('3',R('5')+' − '+R('2')),o:[R('5')+' − '+R('2'),'3('+R('5')+' + '+R('2')+')',R('5')+' + '+R('2'),'1'],a:2},
+ {q:'Раскрой скобки: ('+R('3')+' − '+R('2')+')²',o:['1','5 − 2'+R('6'),'5 + 2'+R('6'),'5 − '+R('6')],a:1},
+ {q:'Вынеси множитель: '+R('45'),o:['9'+R('5'),'3'+R('5'),'5'+R('3'),'15'+R('3')],a:1}
+];
+const quizEl=document.getElementById('quiz');
+QUIZ.forEach((item,i)=>{
+  const card=document.createElement('div');card.className='card q-card';
+  card.innerHTML='<div class="q-title">'+(i+1)+'. '+item.q+'</div>'+
+    item.o.map((op,j)=>'<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'"><span>'+op+'</span></label>').join('');
+  quizEl.appendChild(card);
+});
+document.getElementById('checkQuiz').onclick=()=>{
+  let score=0;
+  QUIZ.forEach((item,i)=>{
+    const card=quizEl.children[i],labels=card.querySelectorAll('.opt');
+    labels.forEach(l=>l.classList.remove('correct','wrong'));
+    const sel=document.querySelector('input[name=q'+i+']:checked');
+    labels[item.a].classList.add('correct');
+    if(sel){const j=+sel.value;
+      if(j===item.a)score++;else labels[j].classList.add('wrong');}
+  });
+  const res=document.getElementById('result');res.style.display='block';
+  let msg;
+  if(score<=3)msg='Лампа пока тусклая… загляни в теорию и возвращайся 🕯';
+  else if(score<=6)msg='Уже тепло, но можно уютнее 🔥';
+  else if(score<=9)msg='Почти идеально! Корни тебя уважают 🪔';
+  else msg='МАГИСТР КОРНЕЙ. ыы (без посхалки) 👑';
+  res.innerHTML='Результат: <b>'+score+' / 10</b><br>'+msg;
+  document.getElementById('retryQuiz').style.display='block';
+  res.scrollIntoView({behavior:'smooth',block:'center'});
+};
+document.getElementById('retryQuiz').onclick=()=>{
+  document.querySelectorAll('#quiz input').forEach(i=>i.checked=false);
+  document.querySelectorAll('#quiz .opt').forEach(l=>l.classList.remove('correct','wrong'));
+  document.getElementById('result').style.display='none';
+  document.getElementById('retryQuiz').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+/* ---------- фейк-поддержка ---------- */
+const modal=document.getElementById('modal'),
+      codeInput=document.getElementById('codeInput'),
+      err=document.getElementById('err');
+document.getElementById('supportBtn').onclick=()=>{
+  modal.classList.add('show');codeInput.value='';err.textContent='';
+  setTimeout(()=>codeInput.focus(),100);
+};
+document.getElementById('modalClose').onclick=()=>modal.classList.remove('show');
+modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('show');});
+document.getElementById('payBtn').onclick=checkCode;
+codeInput.addEventListener('keydown',e=>{if(e.key==='Enter')checkCode();});
+function checkCode(){
+  if(codeInput.value.trim()==='6767'){
+    modal.classList.remove('show');
+    document.getElementById('poshalka').classList.add('show');
+    emojiRain();
+  }else{
+    err.textContent='Код неверный. Деньги не списаны… пока что 😼';
+    const box=modal.querySelector('.modal-box');
+    box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');
+  }
+}
+document.getElementById('backBtn').onclick=()=>{
+  document.getElementById('poshalka').classList.remove('show');
+};
+/* ---------- дождь эмодзи на посхалке ---------- */
+let rainTimer=null;
+function emojiRain(){
+  if(rainTimer)clearInterval(rainTimer);
+  const zone=document.getElementById('poshalka'),set=['💀','🔥','🪔','ы','🤑','✨'];
+  let n=0;
+  rainTimer=setInterval(()=>{
+    if(!zone.classList.contains('show')||n>40){clearInterval(rainTimer);rainTimer=null;return;}
+    const s=document.createElement('span');s.className='fall';
+    s.textContent=set[Math.floor(Math.random()*set.length)];
+    s.style.left=Math.random()*96+'vw';
+    s.style.animationDuration=(2+Math.random()*3)+'s';
+    s.style.fontSize=(20+Math.random()*36)+'px';
+    zone.appendChild(s);n++;
+    setTimeout(()=>s.remove(),5200);
+  },220);
+}
+</script>
+</body>
+</html>
